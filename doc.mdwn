@@ -1,0 +1,128 @@
+Browse / download code [here](http://theclapp.org/lw-vim-mode/src/).
+
+Important Caveats:
+
+* I guess I should mention that I use Edi Weitz's [Lispworks Add-Ons package](http://www.weitz.de/lw-add-ons).  I suppose that might make a difference.
+* Lispworks normally allows Esc as a substitute for the Meta shift key.  This package takes over Esc for use in the normal vi/Vim way (i.e. moving from Insert to Command mode).  If you want Meta, use C-Esc.  However, as a further caveat to *that*, if you previously used Esc-Esc for "Evaluate Expression", note that that was really Meta-Esc, and under Vim-mode you'd use C-Esc,Esc, not C-Esc,C-Esc.
+
+Most items have slightly different semantics than in Vim.  Just as an example, many movement commands that are supposed to leave the cursor at the first non-blank character on the line, don't.
+
+Items marked with a leading (\*) have *significantly* different semantics than in Vim.
+
+Items marked with a (+) are not in Vim.  (Obviously this is not to say that Vim can't do them, just that the mapping doesn't exist.)
+
+Some of these mappings are just my own favorites (like C-F12 to save all files), but they're in there, so I should document them.
+
+Installation:
+
+	(change-directory "path/to/files")
+	(load "vimmode")
+
+Changing modes:
+
+* Enter vi mode: `Shift-Ctrl-Esc`, `c-,`,`c-,` (ctrl-comma twice).
+  All other commands assume you're in vi mode
+* Exit vi mode: `Shift-Ctrl-Esc`, `c-, c-,`
+* Return to command mode (i.e from insert mode): `Esc`, `C-[`
+* See also the Making Changes section for various ways to enter Insert Mode
+
+Movement:
+
+* Previous line: `k Up C-p -` (minus)
+* Previous screen line: `gk`
+* Next line: `j Down C-j Return C-n`
+* Next screen line: `gj`
+* Backward character: `h Left C-h Backspace`
+* Forward character: `l` (lower-case-L) `Right Space`
+* Backward word/WORD: `b C-Left`, `B`
+* Forward word/WORD: `w C-Right`, `W`
+* Backward to end of word/WORD: `ge`, `gE`
+* Forward to end of word: `e`
+* Goto line or end of file: `G`
+* Goto line or top of file: `gg`
+* Top/Bottom/Middle of window: `H`/`L`/`M`
+* Backward/forward one Lisp form: `(`/`)`
+* Backward/forward one list: `C-(`/`C-)`
+* Goto beginning of line: `Home 0` (zero)
+* Goto end of line: `$ End`
+* Move to first non-blank on line: `^`
+* Move to beginning of defun: `[\`
+* Move to end of defun: `]\`
+* Move to column N: `|`
+* Search forward/backward for character: `f`/`F`
+* Search forward/backward till before character: `t`/`T`
+* Repeat last `f`/`F`/`t`/`T` search: `;`
+* Repeat last `f`/`F`/`t`/`T` search, in the opposite direction: `,`
+
+Scrolling:
+
+* Page down: `C-f`
+* Page up: `C-b`
+* Scroll window down by one line: `C-y S-Up`
+* Scroll window up by one line: `C-e S-Down`
+* Move current line to top/middle/bottom of window: `zt`/`zz`/`zb` or `z<CR>`/`z.`/`z-`
+
+Repeating:
+
+* Repeat last change: `.` (dot/period/full stop)
+* Repeat count: `<digits>`, e.g. 12j will move down 12 lines
+
+Making changes:
+
+* start insert before current character: `i`
+* start insert before first non-blank character in the line: `I`
+* start append after current character: `a`
+* append at end of line: `A`
+* exit insert, back to command mode: `Esc`, `Ctrl-[`
+* Delete next/previous character: `x/X`
+* (*)Delete motion: `d{motion}`
+* (*)Change motion: `c{motion}`
+* Delete line: `dd` (maybe should have a (*) in front)
+* (*)Delete to end of line: `D`
+* (*)Put recent deletion: `P`
+* Open line up/down: `O/o`
+* Lowercase word: `~w`
+* Lowercase/uppercase region: `vu/vU`
+* shift line right: `>>`
+* (*) Join with next line: `J`
+* Replace characters: `r<char>`
+* Insert characters from previous / next line: `C-y`/`C-e`
+
+Buffers/windows:
+
+* New buffer: `:n`
+* New window: `C-w`,`n` (that's C-w, then n)
+* Previous/next window: `C-w`,`k` / `C-w`,`j`
+* Close window: `C-w`,`c`
+* (*)List buffers: `:ls`,Return `F7`
+* (*)Select buffer: `:b`,Space
+* (*)Next buffer: `:bn`,Return `C-F10`
+
+Searching:
+
+* (*)search forward: `/`
+* (*)search backward: `?`
+* (*)repeat most recent search forward/backwards: `n`/`N`
+* List matching lines (sort of like :g/re/p in Vim): `:gp`
+* Delete matching lines (like :g/re/d in Vim): `:gd`
+
+Read/write files:
+
+* Save file: `:w`,Return
+* Save all files: `:wa`,Return `C-F12`
+* Save all files and exit: `:wqa`,Return
+* (*)Write file (to different filename): `:w`,Space
+* (*)Edit new file: :e,Space
+* Reload file from disk: `:e!`
+* Read file into buffer: `:r`,Space
+
+Tagging/finding source:
+
+* (*)Find source: `C-]`
+* (*)Find next tag: `:tn`,Return
+* (*)View tag list: `:ts`,Return
+
+Evaluate Lisp code:
+
+* (+)Evaluate current top-level-form: `,x`
+* (+)Evaluate current top-level form in listener: `,l`

@@ -1,0 +1,106 @@
+v7, 5/19/2008
+
+General changes:
+
+* Works with LW 5.1.  May not work any more with 5.0, haven't tried it.
+* Make Escape work like it should.  As a necessary side effect, the use of
+  Escape for "Meta" changes to Ctrl-Escape, and the change is global to
+  the running image, whether a buffer is in a Vim mode or not.  Ctrl-[ still
+  works, though.
+* Put all code in the :vim package instead of the :editor package.  Did a
+  brute-force wrapper of most of the editor functions I use.  Partly this
+  was to prepare for wrapping these commands for use of Kenny Tilton's
+  Cells library.
+* You can now `.` after an insert or append.
+* Counts on `.` work better now, maybe even correctly.
+* New macro: def-start-insert, used for `i`, `I`, `a`, and anything else that
+  starts an insert.
+
+Mappings changed:
+
+* Function formerly bound to `p` now bound to `P`, since it puts the cut
+  text in front of the current line.
+* `J` now joins with the *next* line instead of the *previous* line.
+
+Mappings added:
+
+* `Esc` in insert mode
+* `|` -- move to column
+* `P` -- Put cut text above the current line
+* `C-y`/`C-e`
+* `n`/`N` -- repeat most recent search, forward / backwards
+* `,l` -- evaluate code in Listener
+
+Not much to show for 2.5 months work, but on the other hand most of it was
+actually in the last few weeks.  :)
+
+v6, 02/27/2008
+
+* Made `e` and `ge` "inclusive"
+* Separated `W` and `E` -- they used to map to the same command; now they
+  don't.
+* Renamed things like `Vim Forward WORD CAPS` to `Vim Forward BIGWORD`.
+* Added with-move macro; reimplemented many movement commands using it.
+
+Mappings changed
+
+* `W`/`E`
+
+Mappings Added
+
+* `E`/`gE`
+* `a`/`A`
+* `c{motion}`
+* `f`/`F`/`t`/`T`/`;`/`,`
+* `gf`
+
+v5, 12/29/2007
+
+* Forward and backward by vi-word and vi-WORD commands now work correctly.
+  These are commands w, W, b, B, e, ge.  Hmm, looks like I missed E and gE.
+* Printing key bindings is commented out.
+
+Mappings changed:
+
+* `W`/`B`/`e`
+
+Mapping added:
+
+* `ge`
+
+v4, 12/14/2007
+
+* Add this changelog
+* Add check for quoted list in bind-vim
+* Reorganized/changed some bindings
+* Added most movement bindings to Operator Pending mode, to make
+  movement-pending commands work better.
+* Added commands and bindings for `zt`/`zz`/`zb` and `z<cr>`/`z.`/`z-`.  The latter set
+  work just like the former set, i.e. they do not leave the cursor on the
+  first non-blank in the line.
+* Added commands and bindings for easy repeat counts; `12j` now works, you don't
+  have to say `c-u 12 j`.
+* Changed `:e!` to map to "Vim Revert Buffer", which resets the undo history
+  after it reads the file from disk, but it's still a bit wonky.
+* Kind of in the middle of adding an in-vim-command macro that takes care of
+  boilerplate start-vim-command / stop-vim-command stuff, so that when I add
+  new stuff that needs to happen at the start & end of a command, I only have
+  to change code in one place.
+* Added a setup-indent to def-vim-var-definer.
+* Added a new kind of vim-var, window vars; define via def-vim-window-var.  I
+  suggest a `w-` prefix on all window vars, just like the `b-` prefix on all
+  buffer vars.
+* Added several hook variables, but don't actually use them yet.
+
+Commands / mappings added:
+
+* `-` (minus) to go up a line
+* `zt`/`zz`/`zb`, `z<cr>`/`z.`/`z-` (see note above)
+* repeat counts
+* `r<char>`
+* `gg`
+* `dd`
+
+Commands and mappings changed or fixed:
+
+* `d{movement}`

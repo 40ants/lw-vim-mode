@@ -11,8 +11,10 @@ General changes:
 
 Mappings changed/added
 
-* `(` / `)`: changed from Vim Backward/Forward Form to Vim Backward/Forward Sentence.  Use `C-(` / `C-)` for moving over lists.
-* `v` to enter Visual mode.  Really just sets the mark to the current cursor position.
+* `(` / `)`: changed from Vim Backward/Forward Form to Vim Backward/Forward
+   Sentence.  Use `C-(` / `C-)` for moving over lists.
+* `v` to enter Visual mode.  Really just sets the mark to the current cursor
+   position.
 * `P` / `p` to put before/after.
 * `Y` to yank line
 * `D` to kill to end of line.

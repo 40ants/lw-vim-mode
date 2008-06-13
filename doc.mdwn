@@ -1,7 +1,8 @@
-Browse / download code [here](http://theclapp.org/lw-vim-mode/src/).
+Browse / download code [here](http://common-lisp.net/project/lw-vim-mode/darcs/lw-vim-mode).
 
 Important Caveats:
 
+* In case it's not obvious, this entire package assumes a familiarity with vi/Vim.  Many commands and mappings are documented only by listing the Vim key that invokes it, and assume that you know what that does.
 * I guess I should mention that I use Edi Weitz's [Lispworks Add-Ons package](http://www.weitz.de/lw-add-ons).  I suppose that might make a difference.
 * Lispworks normally allows Esc as a substitute for the Meta shift key.  This package takes over Esc for use in the normal vi/Vim way (i.e. moving from Insert to Command mode).  If you want Meta, use C-Esc.  However, as a further caveat to *that*, if you previously used Esc-Esc for "Evaluate Expression", note that that was really Meta-Esc, and under Vim-mode you'd use C-Esc,Esc, not C-Esc,C-Esc.
 
@@ -41,7 +42,7 @@ Movement:
 * Goto line or end of file: `G`
 * Goto line or top of file: `gg`
 * Top/Bottom/Middle of window: `H`/`L`/`M`
-* Backward/forward one Lisp form: `(`/`)`
+* Backward/forward one sentence: `(`/`)`
 * Backward/forward one list: `C-(`/`C-)`
 * Goto beginning of line: `Home 0` (zero)
 * Goto end of line: `$ End`
@@ -75,18 +76,22 @@ Making changes:
 * append at end of line: `A`
 * exit insert, back to command mode: `Esc`, `Ctrl-[`
 * Delete next/previous character: `x/X`
-* (*)Delete motion: `d{motion}`
-* (*)Change motion: `c{motion}`
-* Delete line: `dd` (maybe should have a (*) in front)
-* (*)Delete to end of line: `D`
-* (*)Put recent deletion: `P`
+* Change motion: `c{motion}`
 * Open line up/down: `O/o`
 * Lowercase word: `~w`
-* Lowercase/uppercase region: `vu/vU`
 * shift line right: `>>`
-* (*) Join with next line: `J`
+* Join with next line: `J`
 * Replace characters: `r<char>`
 * Insert characters from previous / next line: `C-y`/`C-e`
+
+Cut/paste, yank/put, kill/un-kill:
+
+* Delete line: `dd` (maybe should have a (*) in front)
+* Delete to end of line: `D`
+* Delete motion: `d{motion}`
+* Yank line: `Y`, `yy`
+* Yank motion: `y{motion}`
+* Put recent yank or delete before/after cursor: `P`/`p`
 
 Buffers/windows:
 

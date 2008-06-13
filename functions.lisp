@@ -3,6 +3,9 @@
 (defun linewise ()
   b-vim-linewise)
 
+(defun save-linewise-status ()
+  (setf *vim-saved-linewise-status* b-vim-linewise))
+
 (defun exclusive ()
   b-vim-exclusive)
 
@@ -191,6 +194,10 @@
           while (move)
           finally return (= n count))))
 
+(defmethod vim-offset (count (type (eql :sentence)) forward point &key &allow-other-keys)
+  (unless count (setf count 1))
+  (sentence-offset point (if forward count (- count))))
+
 (defun current-word (&optional (word-type :keyword) (point (current-point)))
   (unless (listp word-type)
     (setf word-type (list word-type)))
@@ -249,14 +256,15 @@
 (defun finish-pending-motion (move)
   (let ((saved-vim-movement-pending b-vim-movement-pending))
     (flet ((command (p)
-             (setf b-vim-movement-pending saved-vim-movement-pending)
-             (move-point b-vim-point-before-movement (current-point))
-             (funcall move p)
-             (unless (exclusive)
-               (character-offset (current-point) 1))
-             (funcall *vim-pending-action*
-                      b-vim-point-before-movement
-                      (current-point))))
+             (save-excursion
+              (setf b-vim-movement-pending saved-vim-movement-pending)
+              (move-point b-vim-point-before-movement (current-point))
+              (funcall move p)
+              (unless (exclusive)
+                (character-offset (current-point) 1))
+              (funcall *vim-pending-action*
+                       b-vim-point-before-movement
+                       (current-point)))))
       (command nil)
       (setf *vim-last-action* #'command
             *vim-repeat-multiplier* nil
@@ -344,7 +352,7 @@
 ; 123456789
 ;    ^ ^
 ; an "exclusive" motion d2l deletes the "45".
-(defun vim-delete-motion (begin end)
+(defun vim-action-over-motion (action begin end)
   ;; Make sure begin and end are distinct objects, different from each other
   ;; and different from (current-point).
   (with-point ((begin begin)
@@ -365,5 +373,5 @@
     ; (format t "begin is ~S, end is ~S~%" begin end)
     (move-point (current-point) begin)
     (set-current-mark end)
-    (kill-region-command nil)
+    (funcall action nil)
     (move-point (current-point) begin)))

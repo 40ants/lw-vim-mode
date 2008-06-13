@@ -4,6 +4,7 @@
 (defmode "Vim Command" :setup-function 'setup-vim-command-mode)
 (defmode "Vim Insert" :setup-function 'setup-vim-insert-mode)
 (defmode "Vim Operator Pending")
+(defmode "Vim Visual")
 
 (defvar *orig-meta-prefix-gesture-spec* editor::*meta-prefix-gesture-spec*)
 (defvar *orig-interrupt-keys* '(#\c-g))
@@ -36,6 +37,14 @@
 (def-start-insert "Vim Insert Mode" (p) "" ""
   (declare (ignore p))
   t)
+
+(defcommand "Vim Visual Mode" (p) "" ""
+  (setf (buffer-minor-mode (current-buffer) "Vim Operator Pending") nil)
+  (setf (buffer-minor-mode (current-buffer) "Vim Command") t)
+  (setf (buffer-minor-mode (current-buffer) "Vim Visual") t)
+  ; from Barry Wilkes via Edi Weitz's lw-add-ons
+  (set-mark-command p)
+  (hl-on-command p))
 
 (defcommand "Exit Vim Mode" (p)
      "Exit Vim Command Mode"
@@ -156,6 +165,12 @@
 (def-vim-move "Vim Backward BIGWORD End" (p) nil :inclusive "" ""
   (vim-offset p :bigword nil (current-point) :end t))
 
+(def-vim-move "Vim Forward Sentence" (p) nil :exclusive "" ""
+  (vim-offset p :sentence t (current-point)))
+
+(def-vim-move "Vim Backward Sentence" (p) nil :exclusive "" ""
+  (vim-offset p :sentence nil (current-point)))
+
 (def-vim-move "Vim Goto Line or End of File" (p) :linewise :inclusive "" ""
   (if p
     (goto-line-command p)
@@ -216,12 +231,40 @@
   (clear-undo-command p))
 
 (def-vim-movement-pending "Vim Delete Motion" (begin end) "" ""
-  (vim-delete-motion begin end))
+  (save-linewise-status)
+  (vim-action-over-motion #'kill-region-command begin end))
 
 (def-vim-movement-pending "Vim Change Motion" (begin end) "" ""
-  (vim-delete-motion begin end)
+  (vim-action-over-motion #'kill-region-command begin end)
   (setf b-vim-movement-pending-ending-mode "Vim Insert"))
-  
+
+(def-vim-movement-pending "Vim Yank Motion" (begin end) "" ""
+  (save-linewise-status)
+  (vim-action-over-motion #'save-region-command begin end))
+
+;; Basically maps D to d$
+(def-vim-change "Vim Kill To End Of Line" (p) "" ""
+  (save-linewise-status)
+  (vim-delete-motion-command nil)
+  (vim-end-of-line-command p))
+
+(def-vim-change "Vim Yank Line" (p) "" ""
+  (save-linewise-status)
+  (vim-yank-motion-command nil)
+  (vim-move-over-whole-line-command p))
+
+(def-vim-change "Vim Put Before" (p) "" ""
+  (when *vim-saved-linewise-status*
+    (line-start (current-point)))
+  (save-excursion
+   (un-kill-command p)))
+
+(def-vim-change "Vim Put After" (p) "" ""
+  (when *vim-saved-linewise-status*
+    (line-offset (current-point) 1 0))
+  (save-excursion
+   (un-kill-command p)))
+
 (defcommand "Vim Argument Digit" (p) "" ""
   (setf w-vim-collecting-count t)
   (argument-digit-command p))
@@ -262,7 +305,7 @@
   (prompt-for-character* "Character: " :ignored)
   (end-of-line-command p)
   )
-   
+
 (def-vim-move "Vim Find Char Left" (p) nil :exclusive "" ""
   (vim-find-char nil p :save t))
 
@@ -309,6 +352,18 @@
     (dotimes (n (or p 1))
       (delete-indentation-command 1))))
 
+(def-vim-move "Vim ISearch Forward Regexp" (p) nil :exclusive "" ""
+  (isearch-forward-regexp-command p))
+
+(def-vim-move "Vim ISearch Backward Regexp" (p) nil :exclusive "" ""
+  (isearch-backward-regexp-command p))
+
+(def-vim-move "Vim Regexp Forward Search" (p) nil :exclusive "" ""
+  (regexp-forward-search-command p))
+
+(def-vim-move "Vim Regexp Reverse Search" (p) nil :exclusive "" ""
+  (regexp-reverse-search-command p))
+
 (def-vim-move "Vim Find Next" (p) nil :exclusive "" ""
   (dotimes (n (or p 1))
     (regular-expression-search (current-point) editor::*last-search-string*)))
@@ -316,3 +371,9 @@
 (def-vim-move "Vim Find Previous" (p) nil :exclusive "" ""
   (dotimes (n (or p 1))
     (regular-expression-search (current-point) editor::*last-search-string* :forwardp nil)))
+
+;; Technically this is not a "change" and should not use def-vim-change.
+;; FIXME: tried a SAVE-EXCURSION around the undo, but that's not really right.  LW undo
+;; leaves the point after the undone text; Vim leaves the point before the undone text.
+(defcommand "Vim Undo" (p) "" ""
+  (undo-command p))

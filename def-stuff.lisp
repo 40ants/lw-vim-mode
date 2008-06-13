@@ -18,7 +18,7 @@
 (editor:setup-indent 'def-vim-move 6)
 (defmacro def-vim-move (name lambda-list linewise incl/excl command-doc function-doc 
                              &body body)
-  (when (not (member incl/excl '(:inclusive :exclusive)))
+  (unless (member incl/excl '(:inclusive :exclusive))
     (error "Invalid incl/excl flag ~A in def-vim-move ~A; should be ~A or ~A~%"
            incl/excl name :inclusive :exclusive))
   (let ((p (car lambda-list))
@@ -43,6 +43,7 @@
                (finish-pending-motion #',move)
                (,move nil))))))))
 
+(editor:setup-indent 'def-vim-movement-pending 4)
 (defmacro def-vim-movement-pending (name lambda-list command-doc function-doc &body body)
   `(defcommand ,name (p) ,command-doc ,function-doc
      (in-vim-command

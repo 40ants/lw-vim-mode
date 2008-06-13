@@ -26,3 +26,8 @@ like dj.")
                     :inverse-p t))
 
 (defvar *vim-default-char-attributes* (make-hash-table))
+
+;; FIXME: This is really a hack.  To interact correctly with the Emacs kill-ring,
+;; we need a ring of these, too.
+(defvar *vim-saved-linewise-status* :linewise
+  "Stores the linewise status of the last yanked text.")

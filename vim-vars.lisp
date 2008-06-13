@@ -28,7 +28,7 @@
             (setf (gethash selector (values-of var))
                   (funcall (init-func-of var))))))
       (error "vim-var: vim-var ~S of type ~S not found" name type))))
-      
+
 (defun vim-var-set (name type value)
   (setf (gethash (vim-var-selector type)
                  (values-of (vim-var-lookup name type)))

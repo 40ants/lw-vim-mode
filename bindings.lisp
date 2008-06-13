@@ -4,7 +4,8 @@
   (ecase mode-abbrev
     (:c "Vim Command")
     (:i "Vim Insert")
-    (:o "Vim Operator Pending")))
+    (:o "Vim Operator Pending")
+    (:v "Vim Visual")))
 
 (defmethod bind-vim ((name string) key (mode string))
   (pushnew key *bound-vim-commands*)
@@ -85,9 +86,11 @@
    ("Vim Top of Window" #\H (:c :o))
    ("Vim Bottom of Window" #\L (:c :o))
    ("Vim Move to Window Line" #\M (:c :o))
-   ("Vim Goto Line or Top of Buffer" "gg" :c)
-   ("Vim Forward Form" #\) (:c :o))
-   ("Vim Backward Form" #\( (:c :o))
+   ("Vim Goto Line or Top of Buffer" "gg" (:c :o))
+   ; ("Vim Forward Form" #\) (:c :o))
+   ; ("Vim Backward Form" #\( (:c :o))
+   ("Vim Forward Sentence" #\) (:c :o))
+   ("Vim Backward Sentence" #\( (:c :o))
    ("Vim Forward List" #\c-\) (:c :o))
    ("Vim Backward List" #\c-\( (:c :o))
    ("Vim Beginning of Line" ; for #\0 see Vim Beginning of Line or Collect Count
@@ -101,6 +104,14 @@
 
    ("Vim To Column N" #\| (:c :o))
 
+   ; Visual mode
+   ("Vim Visual Mode" #\v :c)
+
+   ; yank / put
+   ; ("Save Region" #\y :c)
+   ("Vim Put Before" #\P :c)
+   ("Vim Put After" #\p :c)
+
    ; scrolling
    ("Scroll Window Down" #\c-\f (:c :o))
    ("Scroll Window Up" #\c-\b (:c :o))
@@ -109,7 +120,7 @@
    ("Vim Scroll Line to Top of Window" ("zt" #(#\z #\Return)) (:c :o))
    ("Vim Scroll Line to Middle of Window" ("zz" "z.") (:c :o))
    ("Vim Scroll Line to Bottom of Window" ("zb" "z-") (:c :o))
-   
+
    ; Repeating
    ("Vim Repeat" #\. :c)
    ("Vim Argument Digit" (#\1 #\2 #\3 #\4 #\5 #\6 #\7 #\8 #\9) (:c :o))
@@ -123,20 +134,21 @@
    ("Vim Insert Text at Beginning of Line" #\I :c)
    ("Vim Delete Motion" #\d :c)
    ("Vim Change Motion" #\c :c)
-   ("Kill Line" #\D :c)
-   ("Un-Kill" #\P :c)
-   ("Vim Move Over Whole Line" #\d :o) ; used for "dd"
+   ("Vim Yank Motion" #\y :c)
+   ("Vim Kill To End Of Line" #\D :c)
+   ("Vim Yank Line" #\Y :c)
+   ("Vim Move Over Whole Line" (#\d #\y) :o) ; used for "dd" and "yy"
    ("Vim Move Over Inner Word" "iw" :o)
    ("Vim Move Over A Word" "aw" :o)
    ("Vim Move Over Inner BigWord" "iW" :o)
    ("Vim Move Over A BigWord" "aW" :o)
    ("Vim Open Line Down" #\o :c)
    ("Vim Open Line Up" #\O :c)
-   ("Undo" #\u :c)
+   ("Vim Undo" #\u :c)
 
    ("Lowercase Word" "~w" :c)
-   ("Lowercase Region" "vu" :c)
-   ("Uppercase Region" "vU" :c)
+   ; ("Lowercase Region" "vu" :c)
+   ; ("Uppercase Region" "vU" :c)
 
    ("Indent Rigidly" ">>" :c)
    ("Vim Join Lines" #\J :c)
@@ -157,14 +169,14 @@
    ("Select Buffer" ":b " :c)
 
    ; search
-   ("ISearch Forward Regexp" #\/ (:c :o))
-   ("ISearch Backward Regexp" #\? (:c :o))
+   ("Vim ISearch Forward Regexp" #\/ (:c :o))
+   ("Vim ISearch Backward Regexp" #\? (:c :o))
    ("Vim Find Next" #\n (:c :o))
    ("Vim Find Previous" #\N (:c :o))
    ("List Matching Lines" ":gp" :c) ; not in Vim, exactly
    ("Delete Matching Lines" ":gd" :c) ; not in Vim
-   ("Regexp Forward Search" #\c-\/ (:c :o))
-   ("Regexp Reverse Search" #\c-\? (:c :o))
+   ("Vim Regexp Forward Search" #\c-\/ (:c :o))
+   ("Vim Regexp Reverse Search" #\c-\? (:c :o))
    ("Vim Find Char Right" #\f (:c :o))
    ("Vim Find Char Left" #\F (:c :o))
    ("Vim Find Till Char Right" #\t (:c :o))

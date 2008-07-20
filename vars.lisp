@@ -20,10 +20,12 @@ like dj.")
 (defvar *vim-last-inserted-text* nil
   "A copy of the text most recently inserted.")
 
-(defvar *font-lock-inverse-face*
-  (editor:make-face 'font-lock-inverse-face
-                    :if-exists t
-                    :inverse-p t))
+;; I'd really like a font that says "change the background to yellow but leave
+;; the foreeground alone.  Using :foreground nil doesn't seem to work.  Oh Well.
+(defvar *font-lock-highlight-search-face*
+  (editor:make-face 'font-lock-highlight-search-face
+                    :if-exists :overwrite
+                    :background :yellow))
 
 (defvar *vim-default-char-attributes* (make-hash-table))
 

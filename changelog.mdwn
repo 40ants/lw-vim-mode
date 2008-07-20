@@ -1,3 +1,16 @@
+7/28/2008
+
+* Created rudimentary ASDF file: lw-vim-mode.asd.
+* Removed vimmode.lisp.
+
+6/13/2008
+
+* Updated doc file.
+* Fixed bug in with-move.  Fixes problem with `w`, `e`, and related commands.
+* Changed name of font-face used to highlight searches.  Changed that face
+  to be a yellow background instead of white-on-black.  Don't know how to say
+  "take the current foreground and add a yellow background".
+
 v8, 6/13/2008
 
 General changes:

@@ -135,9 +135,9 @@
                           (cdr list)
                           (cons :not list)))
                       (skip-current ()
-                        (loop for attrib in '((:whitespace)
-                                              (,word-type)
-                                              (:not :whitespace ,word-type))
+                        (loop for attrib in (list '(:whitespace)
+                                                  (list ,word-type)
+                                                  (list :not :whitespace ,word-type))
                               until (vim-char-attribute attrib ,point)
                               finally return (must (vim-find-attribute ,forward (invert attrib) ,point))))
                       (fix-endp (endp)
@@ -214,7 +214,7 @@
       (points-to-string start end))))
 
 (defun move-over-word (p type end)
-  (vim-offset 1 type nil b-vim-point-before-movement)
+  (vim-offset 1 type nil b-vim-begin-pending-motion)
   (vim-offset (or p 1) type t (current-point) :end end))
 
 (defun vim-read-a-character ()
@@ -256,15 +256,31 @@
 (defun finish-pending-motion (move)
   (let ((saved-vim-movement-pending b-vim-movement-pending))
     (flet ((command (p)
-             (save-excursion
-              (setf b-vim-movement-pending saved-vim-movement-pending)
-              (move-point b-vim-point-before-movement (current-point))
-              (funcall move p)
-              (unless (exclusive)
-                (character-offset (current-point) 1))
-              (funcall *vim-pending-action*
-                       b-vim-point-before-movement
-                       (current-point)))))
+             (setf b-vim-movement-pending saved-vim-movement-pending)
+             (move-point b-vim-point-before-movement (current-point))
+             (move-point b-vim-begin-pending-motion (current-point))
+             (let ((offset (point-column b-vim-point-before-movement)))
+               (funcall move p)
+               (unless (exclusive)
+                 (character-offset (current-point) 1))
+               (funcall *vim-pending-action*
+                        b-vim-begin-pending-motion
+                        (current-point))
+               (if (point-buffer b-vim-point-before-movement) ; point deleted?
+                 (move-point (current-point) b-vim-point-before-movement) ; no
+                 (progn
+                   ; FIXME: Extend with-move to do this more elegantly
+                   (let ((point (current-point)))
+                     (with-point ((limit point))
+                       (line-start point)
+                       (line-end limit)
+                       (loop for count below offset
+                             while (point< point limit)
+                             do (character-offset point 1))
+                       (when (point> point limit)
+                         (character-offset point -1))))
+                   ; ; make a new point
+                   (setf b-vim-point-before-movement (copy-point (current-point))))))))
       (command nil)
       (setf *vim-last-action* #'command
             *vim-repeat-multiplier* nil
@@ -355,7 +371,7 @@
 (defun vim-action-over-motion (action begin end)
   ;; Make sure begin and end are distinct objects, different from each other
   ;; and different from (current-point).
-  (with-point ((begin begin)
+  (with-point ((begin begin :before-insert)
                (end end))
     ; (format t "~&starting Vim Delete Motion: begin is ~S, end is ~S~%" begin end)
     (when (point< end begin)
@@ -370,8 +386,7 @@
       (line-start begin)
       (line-end end)
       (character-offset end 1))
-    ; (format t "begin is ~S, end is ~S~%" begin end)
+    ; (format t "point is ~S, begin is ~S, end is ~S~%" (current-point) begin end)
     (move-point (current-point) begin)
     (set-current-mark end)
-    (funcall action nil)
-    (move-point (current-point) begin)))
+    (funcall action nil)))

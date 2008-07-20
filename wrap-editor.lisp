@@ -106,9 +106,11 @@
   open-line-command
   point<
   point<=
+  point>
   point>=
   point/=
   point-buffer
+  point-column
   points-to-string
   previous-line-command
   prompt-for-character*

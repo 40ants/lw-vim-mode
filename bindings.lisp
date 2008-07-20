@@ -229,7 +229,7 @@
                     (move-point form-start point)
                     (character-offset point length)
                     (font-lock-unfontify-region form-start point)
-                    (font-lock-apply-highlight form-start point *font-lock-inverse-face*)))))
+                    (font-lock-apply-highlight form-start point *font-lock-highlight-search-face*)))))
         )
       )))
 

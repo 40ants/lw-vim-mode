@@ -208,11 +208,10 @@
     (beginning-of-buffer-command p))
   (back-to-indentation-command p))
 
+;; Mostly exists to set linewise
 (def-vim-move "Vim Move Over Whole Line" (p) :linewise :exclusive "" ""
-  (line-start b-vim-point-before-movement)
   (when (and p (> p 1))
-    (line-offset (current-point) (1- p)))
-  (line-end (current-point)))
+    (line-offset (current-point) (1- p))))
 
 (def-vim-move "Vim Move Over Inner Word" (p) nil :inclusive "" ""
   (move-over-word p :word t))
@@ -240,7 +239,8 @@
 
 (def-vim-movement-pending "Vim Yank Motion" (begin end) "" ""
   (save-linewise-status)
-  (vim-action-over-motion #'save-region-command begin end))
+  (vim-action-over-motion #'save-region-command begin end)
+)
 
 ;; Basically maps D to d$
 (def-vim-change "Vim Kill To End Of Line" (p) "" ""

@@ -57,7 +57,9 @@
 (def-vim-var-definer def-vim-window-var :window (current-window))
 
 (def-vim-buffer-var b-vim-point-before-movement (copy-point (current-point))
-  "The point before a movement command.")
+  "The point before a movement command.  Return to this point after a pending motion.")
+(def-vim-buffer-var b-vim-begin-pending-motion (copy-point (current-point))
+  "Move this around to change where a pending motion command starts.")
 (def-vim-buffer-var b-vim-exclusive t
   "Defines whether the current movement command is exclusive")
 (def-vim-buffer-var b-vim-linewise t
@@ -107,3 +109,6 @@ We must know if we're collecting a count so we can process #\0 (zero) correctly.
 
 (def-vim-buffer-var b-vim-char-attributes
     (copy-hash-table *vim-default-char-attributes*))
+
+(def-vim-buffer-var b-vim-visual-mode-type nil
+  "The type of visual mode: nil, :char, :line, :block.")

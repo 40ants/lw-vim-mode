@@ -12,12 +12,14 @@ Items marked with a leading (\*) have *significantly* different semantics than i
 
 Items marked with a (+) are not in Vim.  (Obviously this is not to say that Vim can't do them, just that the mapping doesn't exist.)
 
-Some of these mappings are just my own favorites (like C-F12 to save all files), but they're in there, so I should document them.
+Some of these mappings are just my own favorites (like C-F12 to save all files), but they're in there, so I've documented them.
 
 Installation:
 
-	(change-directory "path/to/files")
-	(load "vimmode")
+	* Load ASDF.  Documenting ASDF is beyond the scope of this document.
+          See <http://www.cliki.net/asdf>.
+	* Link lw-vim-mode.asd into one of your ASDF system directories.
+	* (asdf:operate 'asdf:load-op :lw-vim-mode)
 
 Changing modes:
 
@@ -95,10 +97,10 @@ Cut/paste, yank/put, kill/un-kill:
 
 Buffers/windows:
 
-* New buffer: `:n`
-* New window: `C-w`,`n` (that's C-w, then n)
-* Previous/next window: `C-w`,`k` / `C-w`,`j`
-* Close window: `C-w`,`c`
+* (*)New buffer: `:n`
+* (*)New window: `C-w`,`n` (that's C-w, then n)
+* (*)Previous/next window: `C-w`,`k` / `C-w`,`j`
+* (*)Close window: `C-w`,`c`
 * (*)List buffers: `:ls`,Return `F7`
 * (*)Select buffer: `:b`,Space
 * (*)Next buffer: `:bn`,Return `C-F10`

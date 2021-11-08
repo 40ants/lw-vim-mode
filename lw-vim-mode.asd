@@ -1,0 +1,12 @@
+(defsystem "lw-vim-mode"
+    :depends-on ("cells")
+    :components ((:file "packages")
+                 (:file "wrap-editor")
+                 (:file "vars")
+                 (:file "classes")
+                 (:file "vim-vars")
+                 (:file "def-stuff")
+                 (:file "macros")
+                 (:file "functions")
+                 (:file "commands")
+                 (:file "bindings")))

@@ -354,9 +354,7 @@
           ; *vim-last-action* #'identity
      *vim-repeat-multiplier* nil)
     )
-  (setf editor::*meta-prefix-gesture-spec* (sys::make-gesture-spec
-                                    (char-code #\C-Escape)
-                                    sys:gesture-spec-control-bit))
+  (setf editor::*meta-prefix-gesture-spec* (system:coerce-to-gesture-spec "c-escape"))
   ; fixme: can't seem to have the meta-prefix-gesture and the interrupt key be the same key
   #+nil
   (set-interrupt-keys '(#\escape)))

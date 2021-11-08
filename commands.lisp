@@ -7,7 +7,7 @@
 (defmode "Vim Visual")
 
 (defvar *orig-meta-prefix-gesture-spec* editor::*meta-prefix-gesture-spec*)
-(defvar *orig-interrupt-keys* '(#\c-g))
+(defvar *orig-interrupt-keys* '("c-g"))
 
 (defcommand "All Vim" (p)
      "Put all buffers in Vim Command mode."

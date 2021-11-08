@@ -2,11 +2,11 @@
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defmacro wrap-editor-function (symbol)
-    (let ((editor-symbol (intern symbol :editor)))
+    (let ((editor-symbol (intern (symbol-name symbol) :editor)))
       `(defun ,symbol (&rest rest)
 	 (apply ',editor-symbol rest))))
   (defmacro wrap-editor-macro (symbol)
-    (let ((editor-symbol (intern symbol :editor)))
+    (let ((editor-symbol (intern (symbol-name symbol) :editor)))
       `(defmacro ,symbol (&rest rest)
 	 `(,',editor-symbol ,@rest))))
   (editor:setup-indent 'wrap-list-with 1)

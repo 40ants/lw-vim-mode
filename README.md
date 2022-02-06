@@ -3,7 +3,7 @@ lw-vim-mode
 
 This is the fork of the https://gitlab.common-lisp.net/lw-vim-mode/lw-vim-mode, originally written by [Larry Clapp](https://github.com/theclapp).
 
-WARNING: Original License is qnknown :(
+WARNING: Original License is unknown :(
 
 Changes introduced into this fork:
 

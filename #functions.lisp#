@@ -26,7 +26,7 @@
   (loop for ch across (points-to-string start end)
         if (not (eql ch #\Space))
         do (return nil)
-        finally (return t)))
+        finally (return (t))))
 
 (defun blanks-before (point)
   (with-point ((bol point :temporary))
@@ -71,7 +71,7 @@
     (loop for type in types
           if (vim-char-attribute type point)
           return (not invert-p)
-          finally (return invert-p))))
+          finally (return (invert-p)))))
 
 (defun vim-find-attribute (forward attributes &optional (point (current-point)))
   (with-point ((started-at point))
@@ -139,7 +139,7 @@
                                                   (list ,word-type)
                                                   (list :not :whitespace ,word-type))
                               until (vim-char-attribute attrib ,point)
-                              finally (return (must (vim-find-attribute ,forward (invert attrib) ,point)))))
+                              finally (return (must (vim-find-attribute ,forward (invert attrib) ,point))))
                       (fix-endp (endp)
                         (if endp
                           (must (character-offset ,point (if ,forward -1 1)))
